@@ -7,6 +7,7 @@ const auth = require('./routes/auth');
 const nodemailer = require("nodemailer");
 const cookieParser = require('cookie-parser');
 const redis = require("redis");
+const cors = require('cors');
 dotenv.config()
 app.use(express.json())
 const client = redis.createClient({
@@ -17,6 +18,7 @@ client.on("error", (error) =>
   console.log("Redis client error occured!", error)
 
 );
+app.use(cors());
 app.use(cookieParser())
 app.use("/api/auth", auth)
 // async function testRedisConnection() {
