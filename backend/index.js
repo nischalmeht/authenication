@@ -10,15 +10,18 @@ const redis = require("redis");
 const cors = require('cors');
 dotenv.config()
 app.use(express.json())
-const client = redis.createClient({
-  host: "localhost",
-  port: 6379,
-});
-client.on("error", (error) =>
-  console.log("Redis client error occured!", error)
+// const client = redis.createClient({
+//   host: "localhost",
+//   port: 6379,
+// });
+// client.on("error", (error) =>
+//   console.log("Redis client error occured!", error)
 
-);
-app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:5173', // Vite's default development server port
+  credentials: true
+}));
 app.use(cookieParser())
 app.use("/api/auth", auth)
 // async function testRedisConnection() {

@@ -175,4 +175,34 @@ const checkAuth =async (req,res)=>{
 		res.status(400).json({ success: false, message: error.message });
     }
 }
-module.exports = { signup, login, logout,verifyEmail,forgotPassword ,resetPassword,checkAuth};
+const addCourseDetails = async (req, res) => {
+	const { courseName, studentName, studentEmail } = req.body;
+
+	try {
+		if (!courseName || !studentName || !studentEmail) {
+			return res.status(400).json({ success: false, message: "All fields are required" });
+		}
+
+		const user = await User.findOne({ email: studentEmail });
+		if (!user) {
+			return res.status(404).json({ success: false, message: "Student not found" });
+		}
+
+		if (!user.courses) {
+			user.courses = [];
+		}
+
+		user.courses.push({ courseName, studentName });
+		await user.save();
+
+		res.status(200).json({
+			success: true,
+			message: "Course details added successfully",
+			courses: user.courses,
+		});
+	} catch (error) {
+		console.log("Error in addCourseDetails ", error);
+		res.status(500).json({ success: false, message: "Server error" });
+	}
+};
+module.exports = { signup, login, logout,verifyEmail,forgotPassword ,resetPassword,checkAuth,addCourseDetails};
